@@ -1,0 +1,23 @@
+spring:
+  #스프링 부트는 별도의 설정이 없으면 자체적으로 메모리모드로 실행해버림!! ㄸㄸㄸㄷ 짱이네
+#  datasource:
+##    url: jdbc:h2:tcp://localhost/~/japshop
+##내부 메모리로 테스트 진행하는 방법!!
+#    url: jdbc:h2:mem:test
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: create #기본으로 create-drop 으로 돌아감. 애플리케이션 종료 후 드랍해줌
+#    properties:
+#      hibernate:
+## 운영에서는 sout 대신 로그로 찍는다.
+##        show_sql: true
+#        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace

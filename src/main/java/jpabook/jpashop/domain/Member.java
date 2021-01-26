@@ -23,6 +23,6 @@ public class Member {
     private Address address;
 
     //mappedBy order의 fk 지정해줌.
-    @OneToMany(mappedBy = "member_id")
+    @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 }
