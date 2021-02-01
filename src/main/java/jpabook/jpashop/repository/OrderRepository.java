@@ -2,9 +2,14 @@ package jpabook.jpashop.repository;
 
 import jpabook.jpashop.domain.Order;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -20,7 +25,92 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
-//    public List<Order> findAll(OrderSearch orderSearch) {
-//
-//    }
+    public List<Order> findAll(OrderSearch orderSearch) {
+        // 만약에 orderSearch 필터가 없으면??
+        // 있고 없고에 따라 쿼리를 동적으로 제어해야한다.
+        // 마이바티스는 동적쿼리 잘 제어했다. JPA 는...?
+//        return em.createQuery("select o from Order o join o.member m" +
+//                " where o.status = :status" +
+//                " and m.name like :name", Order.class)
+//                .setParameter("status", orderSearch.getOrderStatus())
+//                .setParameter("name", orderSearch.getMemberName())
+////                .setFirstResult(100)    // 페이징 시 스타트 포지션
+//                .setMaxResults(1000)    // 1000건 가져오기
+//                .getResultList();
+
+
+        // 현재 이 방식은 현업에서 사용안함. 아래의 코드 칠 바엔 마이바티스 사용
+        String jpql = "select o from Order o join o.member m";
+
+        // 여기서 필터 하나하나 체크하고 jqpl 쿼리문을 수정한다
+        Boolean isFirstCondition = true;
+
+        if (orderSearch.getOrderStatus() != null) {
+            if (isFirstCondition) {
+                jpql += " where";
+                isFirstCondition = false;
+            } else {
+                jpql += " and";
+            }
+            jpql += " o.status = :status";
+        }
+
+        //회원 이름 검색
+        if (StringUtils.hasText(orderSearch.getMemberName())) {
+            if (isFirstCondition) {
+                jpql += " where";
+                isFirstCondition = false;
+            } else {
+                jpql += " and";
+            }
+            jpql += " m.name like :name";
+        }
+
+        TypedQuery<Order> query = em.createQuery(jpql, Order.class)
+                .setMaxResults(1000);
+                 // 최대 1000건
+
+        if (orderSearch.getOrderStatus() != null) {
+            query = query.setParameter("status", orderSearch.getOrderStatus());
+        }
+        if (StringUtils.hasText(orderSearch.getMemberName())) {
+            query = query.setParameter("name", orderSearch.getMemberName());
+        }
+
+        return query.getResultList();
+
+    }
+
+    /**
+     * JPA Criteria (JPA 표준)
+     * 실무에서 사용하지 않는다. 이런게 있구나 하고 넘어가자
+     * 유지보수 최악의 코드다... 이게 무슨 쿼리인지 알 수 있나?...
+     * querydsl 라이브러리로 동적 쿼리를 제어한다
+     */
+    public List<Order> findAllByCriteria(OrderSearch orderSearch) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Order> cq = cb.createQuery(Order.class);
+        Root<Order> o = cq.from(Order.class);
+        Join<Object, Object> m = o.join("member", JoinType.INNER);
+
+        List<Predicate> criteria = new ArrayList<>();
+
+        // 주문 상태 검색
+        if (orderSearch.getOrderStatus() != null) {
+            Predicate status = cb.equal(o.get("status"), orderSearch.getOrderStatus());
+            criteria.add(status);
+        }
+
+        //회원 이름 검색
+        if (StringUtils.hasText(orderSearch.getMemberName())) {
+            Predicate name = cb.like(m.<String>get("name"), "%" +
+                    orderSearch.getMemberName() + "%");
+            criteria.add(name);
+        }
+
+        cq.where(cb.and(criteria.toArray(new Predicate[criteria.size()])));
+        TypedQuery<Order> query = em.createQuery(cq)
+                .setMaxResults(1000); //최대 1000건
+        return query.getResultList();
+    }
 }
