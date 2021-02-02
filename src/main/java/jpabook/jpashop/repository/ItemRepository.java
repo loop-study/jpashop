@@ -17,6 +17,8 @@ public class ItemRepository {
         if (item.getId() == null) {
             em.persist(item);
         } else {
+            // 실무에서 잘 안쓰임? 수정은 어찌함??? JPA 에서 권장하는 방법이 있다함
+            // -> null 값이 존재 시 null 로 들어가는 불상사가 발생함, 그러니 사용안함
             em.merge(item);
         }
     }

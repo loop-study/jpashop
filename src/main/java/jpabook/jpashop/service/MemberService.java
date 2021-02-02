@@ -29,6 +29,7 @@ public class MemberService {
 
     //==주요 로직==//
     //회원 가입
+    @Transactional
     public Long join(Member member) {
         //중복 회원 로직 추가해보자
         validateDuplicateMember(member);

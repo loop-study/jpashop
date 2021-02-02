@@ -14,4 +14,9 @@ public class Book extends Item {
 
     private String author;
     private String isbn;
+
+//    public static Book createBook(Book book) {
+//
+//        return ;
+//    }
 }
