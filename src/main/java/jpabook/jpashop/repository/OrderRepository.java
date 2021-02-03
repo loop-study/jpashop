@@ -25,7 +25,14 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
-    public List<Order> findAll(OrderSearch orderSearch) {
+    public List<Order> findAll() {
+        return em.createQuery("select o from Order o join o.member m", Order.class)
+//                .setFirstResult(100)    // 페이징 시 스타트 포지션
+                .setMaxResults(1000)    // 1000건 가져오기
+                .getResultList();
+    }
+
+    public List<Order> findAllByString(OrderSearch orderSearch) {
         // 만약에 orderSearch 필터가 없으면??
         // 있고 없고에 따라 쿼리를 동적으로 제어해야한다.
         // 마이바티스는 동적쿼리 잘 제어했다. JPA 는...?
