@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create #기본으로 create-drop 으로 돌아감. 애플리케이션 종료 후 드랍해줌
+      ddl-auto: none #기본으로 create-drop 으로 돌아감. 애플리케이션 종료 후 드랍해줌
     properties:
       hibernate:
 # 운영에서는 sout 대신 로그로 찍는다.

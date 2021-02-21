@@ -59,4 +59,12 @@ public class MemberService {
     }
 
 
+    // member 반환을 안하나? 개발자마다 철학차이?
+    // 이 강의에서는 커맨드랑 쿼리를 철저히 분리하자
+    @Transactional
+    public void update(Long id, String name) {
+        // 변경 감지를 이용한 update 처리.
+        Member member = memberRepository.findOne(id);
+        member.setName(name);
+    }
 }
