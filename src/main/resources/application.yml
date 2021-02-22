@@ -13,6 +13,7 @@ spring:
 # 운영에서는 sout 대신 로그로 찍는다.
 #        show_sql: true
         format_sql: true
+        default_batch_fetch_size: 100
 
 logging:
   level:

@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -126,6 +127,30 @@ public class OrderRepository {
                         " join fetch o.member m" +
                         " join fetch o.delivery d", Order.class
         ).getResultList();
+    }
+
+    //
+    public List<Order> findAllWithItem() {
+        // queryDsl 쓰면 이렇게 복잡한 쿼리를 작성 안해도 된다
+        return em.createQuery(
+                    "select distinct o from Order o" +
+                            " join fetch o.member m" +
+                            " join fetch o.delivery d" +
+                            " join fetch o.orderItems oi" +
+                            " join fetch oi.item", Order.class)
+//                .setFirstResult(1)
+//                .setMaxResults(100)
+                .getResultList();
+    }
+
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
 //    public List<OrderSimpleQueryDto> finOrderDtos() {

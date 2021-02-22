@@ -27,7 +27,6 @@ public class MamberApiController {
         return memberService.findMembers(); // api 스펙이 굳음, 수정 불가 방법, 안 좋음.
     }
 
-    //
     @GetMapping("/api/v2/members")
     public Result membersV2() {
         List<Member> findMembers = memberService.findMembers();
