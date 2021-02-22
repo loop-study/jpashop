@@ -30,7 +30,6 @@ public class InitDb {
         // 여기에 코드 넣어도 되지 않은가? 스프링 라이프 사이클때문에 트랜잭션 같은 부분에서 문제가 생김.
         // initService.dbInit1(); // 샘플 데이터 추가 후 주석처리
         // initService.dbInit2(); // 샘플 데이터 추가 후 주석처리
-
     }
 
     @Component

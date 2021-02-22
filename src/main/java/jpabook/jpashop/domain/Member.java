@@ -27,5 +27,6 @@ public class Member {
     //mappedBy order의 fk 지정해줌.
     // @JsonIgnore // 외부 노출 안 시켜줌, json 반환 안함, ***최악의 방법!!! 해당 엔티티를 사용하는 모든 곳에서 조회 못함;;;;
     @OneToMany(mappedBy = "member")
+    @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 }
