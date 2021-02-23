@@ -55,7 +55,8 @@ public class MemberService {
     //회원 한명 조회
     @Transactional(readOnly = true)
     public Member findOne(Long memberId) {
-        return memberRepository.findOne(memberId);
+//        return memberRepository.findOne(memberId);
+        return memberRepository.findById(memberId).get();
     }
 
 
@@ -64,7 +65,7 @@ public class MemberService {
     @Transactional
     public void update(Long id, String name) {
         // 변경 감지를 이용한 update 처리.
-        Member member = memberRepository.findOne(id);
+        Member member = memberRepository.findById(id).get();
         member.setName(name);
     }
 }

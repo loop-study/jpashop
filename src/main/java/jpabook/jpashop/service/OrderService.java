@@ -31,7 +31,8 @@ public class OrderService {
     public Long order(Long memberId, Long itemId, int count) {
 
         // entity select
-        Member member = memberRepository.findOne(memberId);
+//        Member member = memberRepository.findOne(memberId);
+        Member member = memberRepository.findById(memberId).get();
         Item item = itemRepository.findOne(itemId);
 
         // delivery create
